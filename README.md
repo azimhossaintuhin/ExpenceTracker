@@ -1,6 +1,6 @@
 # Expense Tracker 💸
 
-<img src="./src/assets/budget.png" alt="Expense Tracker Screenshot" width="300" height="600">
+<img src="./src/assets/budget.png" alt="Expense Tracker Screenshot" width="200" height="200">
 ## Overview
 
 Expense Tracker is a powerful, user-friendly mobile application designed to help you effortlessly manage and track your personal expenses. Built with modern technologies, this full-stack app provides a seamless experience for financial tracking and analysis.
