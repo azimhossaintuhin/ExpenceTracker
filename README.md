@@ -1,6 +1,6 @@
 # Expense Tracker 💸
 
-![Expense Tracker Screenshot](./src/assets/budget.png)
+![Expense Tracker Screenshot](./src/assets/budget.png =300x600)
 
 ## Overview
 
