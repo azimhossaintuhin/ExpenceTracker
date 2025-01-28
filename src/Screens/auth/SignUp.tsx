@@ -4,8 +4,9 @@ import {
   Text,
   View,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Globalcontainer } from "../../constant/Styles";
 import { Formik } from "formik";
@@ -13,8 +14,32 @@ import { SignupSchema } from "../../validations/Signup_validation";
 import ValideationFiled from "../../components/CoustomFields";
 import { goBack, push } from "../../utils/Navigations";
 import { Colors } from "../../constant/Colors";
+import { useMutation } from "@tanstack/react-query";
+import { ApiInstance } from "../../config/Api";
 
 const SignUp = () => {
+
+  const {mutate , isPending} =  useMutation({
+    mutationKey:["signup"],
+    mutationFn:async(data:{username:string , password:string})=>{
+      try{
+        const response = await ApiInstance.post("register/", data)
+        return response.data
+      }
+      catch(e){
+        throw new Error(e)
+      }
+    },
+    onSuccess:(data)=>{
+      console.log(data)
+      goBack()
+    },
+    onError:(e)=>{
+      console.log(e.message)
+    }
+  })
+
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={{ width: "100%" }} behavior="padding">
@@ -25,8 +50,8 @@ const SignUp = () => {
           </View>
 
           <Formik
-            initialValues={{ email: "", password: "", confirmPassword: "" }}
-            onSubmit={(values) => console.log(values)}
+            initialValues={{ username: "", password: "", confirmPassword: "" }}
+            onSubmit={(values) => mutate(values)}
             validationSchema={SignupSchema}
           >
             {({
@@ -39,9 +64,9 @@ const SignUp = () => {
             }) => (
               <>
                 <ValideationFiled
-                  fieldName="email"
+                  fieldName="username"
                   values={values}
-                  handleChange={handleChange("email")}
+                  handleChange={handleChange("username")}
                   handleBlur={handleBlur}
                   errors={errors}
                   touched={touched}
@@ -66,8 +91,8 @@ const SignUp = () => {
                 />
 
                 <View style={styles.inputContainer}>
-                  <Pressable style={styles.button} onPress={() => push("Home")}>
-                    <Text style={styles.buttibText}>Login</Text>
+                  <Pressable style={styles.button} onPress={() => handleSubmit()}>
+                   {isPending ? <ActivityIndicator color={Colors.white} size="small" /> : <Text style={styles.buttibText}>Sign Up</Text>}
                   </Pressable>
                 </View>
               </>

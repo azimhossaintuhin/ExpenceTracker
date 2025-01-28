@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Dimensions}from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { CardProps } from '../types'
-import { Colors } from '../constant/Colors'
+
 
 const { width } = Dimensions.get("window")
 
@@ -30,13 +30,13 @@ const Card: FC<CardProps> = ({ item, index }) => {
         ]}
       >
         <View style={styles.contentContainer}>
-          <Text style={styles.cardTitle}>Pending Tasks</Text>
-          <Text style={styles.cardNumber}>2</Text>
+          <Text  style={styles.cardTitle}>{item?.title}</Text>
+          <Text style={styles.cardNumber}>{item?.count}</Text>
         </View>
         
         <View style={styles.iconContainer}>
           <MaterialIcons 
-            name="pending-actions" 
+            name={item.icon}
             size={50} 
             color="rgba(255,255,255,0.7)" 
           />
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 8,
-    opacity: 0.9
+    opacity: 0.9,
   },
   cardNumber: {
     color: 'white',

@@ -1,5 +1,6 @@
 
 import BottomSheet from "@gorhom/bottom-sheet";
+
 export type RootStackParamList = {
     Splash: undefined;
     Login: undefined;
@@ -46,10 +47,11 @@ export interface InputTypes {
   export interface TodosProps {
     item:any,
     index:number;
+   
   }
 
   export type BottomsheetProps = {
     sheetRef:React.RefObject<BottomSheet>
-    changeHandler:(index:number)=>void
+    
     children:React.ReactNode
   }

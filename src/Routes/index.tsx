@@ -11,7 +11,7 @@ import { useAuth } from "../context/context";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Routes = () => {
-  const { login } = useAuth();
+  const { login } = useAuth();  // Make sure login is being updated from context
 
   return (
     <NavigationContainer ref={navigationRef}>
@@ -20,17 +20,17 @@ const Routes = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="Splash"
+        initialRouteName="Splash"  // Start with Splash screen
       >
         <Stack.Screen name="Splash" component={Splash} />
-
-        {/* Conditional rendering for auth-related screens */}
+        
         {!login ? (
           <>
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
           </>
         ) : (
+         
           <Stack.Screen name="Home" component={Home} />
         )}
       </Stack.Navigator>

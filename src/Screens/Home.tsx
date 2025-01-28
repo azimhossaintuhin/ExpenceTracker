@@ -6,9 +6,10 @@ import {
   TextInput,
   Image,
   Pressable,
-  FlatList,
+  KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { gloabalwidth, Globalcontainer } from "../constant/Styles";
 import Card from "../components/Card";
@@ -18,11 +19,94 @@ import Todos from "../components/Todos";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Bottomsheet from "../components/Bottomsheet";
 import BottomSheet from "@gorhom/bottom-sheet";
-
+import Animated from "react-native-reanimated";
+import { Formik } from "formik";
+import ValideationFiled from "../components/CoustomFields";
+import * as Yup from "yup";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ApiInstance } from "../config/Api";
 
 const Home = () => {
-  const data = [1, 2, 3, 4];
   const [search, setSearch] = useState<boolean>(false);
+
+  const [counter, setCounter] = useState({
+    all: 0,
+    pending: 0,
+    completed: 0,
+  });
+
+  const queryClient = useQueryClient();
+
+  const CardData = [
+    {
+      id: 1,
+      title: "All Tasks",
+      count: counter.all,
+      icon: "format-list-numbered",
+    },
+    {
+      id: 2,
+      title: "Pending Tasks",
+      count: counter.pending,
+      icon: "pending-actions",
+    },
+    {
+      id: 3,
+      title: "Completed Tasks",
+      count: counter.completed,
+      icon: "checklist",
+    },
+  ];
+
+  // bottom  shett
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const handleSheetOpen = useCallback(() => {
+    bottomSheetRef.current?.expand();
+  }, []);
+
+  // all Api call willbe her
+  const {
+    data: todos,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["todos"],
+    queryFn: async () => {
+      try {
+        const response = await ApiInstance.get("/todos/");
+        return response.data.todos;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["addTodo"],
+    mutationFn: async (data: { todo: string }) => {
+      try {
+        const response = await ApiInstance.post("/todos/", data);
+        return response.data?.todo;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (todos) {
+      const all = todos.length;
+      const pending = todos.filter((todo: any) => !todo.completed).length;
+      const completed = todos.filter((todo: any) => todo.completed).length;
+      const counter_data = {
+        all: all,
+        pending: pending,
+        completed: completed,
+      };
+      setCounter(counter_data);
+    }
+  }, [todos]);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -56,38 +140,103 @@ const Home = () => {
           {!search && (
             <>
               <View style={styles.cardContainer}>
-                {data.map((item, index) => (
+                {CardData.map((item, index) => (
                   <Card item={item} index={index} key={index} />
                 ))}
               </View>
+
               {/* All my TOdos */}
               <View style={styles.todoContainer}>
                 <View style={styles.todoHeader}>
                   <Text style={styles.headerText}>All Todos</Text>
-                  <Pressable style={styles.hederButton}>
+
+                  <Pressable
+                    style={styles.hederButton}
+                    onPress={handleSheetOpen}
+                  >
                     <MaterialIcons name="add" size={20} color={Colors.white} />
                   </Pressable>
                 </View>
 
-                <FlatList
-                  data={data}
+                {todos?.length === 0 && (
+                  <Text style={styles.NullText}>No Todos Found</Text>
+                )}
+
+                <Animated.FlatList
+                  scrollEnabled={false}
+                  data={todos}
                   keyExtractor={(item, index) => index.toString()}
                   style={styles.todoScroller}
                   renderItem={({ item, index }) => {
-                    return <Todos item={item} index={index} />;
+                    return <Todos key={index} item={item} index={index + 1} />;
                   }}
                 />
-
-                <Bottomsheet
-                sheetRef={useRef<BottomSheet>(null)}
-                changeHandler={(index) => console.log(index)}
-                >
-                <Text>Bottom sheet</Text>
-                </Bottomsheet>
               </View>
             </>
           )}
         </ScrollView>
+        {/* Bottom sheet */}
+        <Bottomsheet sheetRef={bottomSheetRef}>
+          <View style={styles.sheetHeader}>
+            <Text style={styles.sheetText}>Add Todo</Text>
+            <Pressable
+              onPress={() => bottomSheetRef.current?.close()}
+              style={styles.hederButton}
+            >
+              <MaterialIcons name="close" size={20} color={Colors.white} />
+            </Pressable>
+          </View>
+          <KeyboardAvoidingView behavior="padding">
+            <View style={styles.sheetForm}>
+              <Formik
+                initialValues={{ todo: "" }}
+                validationSchema={Yup.object().shape({
+                  todo: Yup.string().required("Please enter a todo"),
+                })}
+                onSubmit={(values, { resetForm }) =>
+                  mutate(values, {
+                    onSuccess: () => {
+                      resetForm();
+                      queryClient.invalidateQueries<any>("todos");
+                      bottomSheetRef.current?.close();
+                    },
+                  })
+                }
+              >
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit: todoSubmit,
+                  touched,
+                  errors,
+                  values,
+                }) => (
+                  <>
+                    <ValideationFiled
+                      fieldName="todo"
+                      values={values}
+                      handleChange={handleChange("todo")}
+                      handleBlur={handleBlur}
+                      errors={errors}
+                      touched={touched}
+                    />
+
+                    <Pressable
+                      style={styles.seetSubmitBtn}
+                      onPress={() => todoSubmit()}
+                    >
+                      {isPending ? (
+                        <ActivityIndicator color={Colors.white} size="small" />
+                      ) : (
+                        <Text style={{ color: Colors.white }}>Add Todo</Text>
+                      )}
+                    </Pressable>
+                  </>
+                )}
+              </Formik>
+            </View>
+          </KeyboardAvoidingView>
+        </Bottomsheet>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -182,5 +331,36 @@ const styles = StyleSheet.create({
   todoScroller: {
     width: "100%",
     paddingBottom: 30,
+  },
+
+  sheetHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  sheetText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  sheetForm: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  seetSubmitBtn: {
+    padding: 10,
+    backgroundColor: Colors.primary,
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  NullText: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: Colors.fourthColor,
+    marginVertical: 20,
   },
 });

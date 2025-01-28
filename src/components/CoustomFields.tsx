@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20,
     paddingHorizontal: 5,
+    width: "100%",
   },
   input: {
     paddingVertical: 15,

@@ -11,22 +11,27 @@ const Splash = () => {
         "Manrope": require("../assets/fonts/Manrope-VariableFont_wght.ttf")
     })
 
-    const {login} = useAuth()
+    const {login , loading} = useAuth()
 
     useEffect(() => {
-        if(loaded){
-        console.log("loaded")
-        if(login){
-            console.log("login")
-            replace("Home")
-        }
-        else{
-            console.log("not login")
-            replace("Login")
-        }
         
-        }
-    }, [loaded , login])
+        const timer = setTimeout(() => {
+            if (loaded && !loading) {
+              if (login) {
+                console.log("login");
+                replace("Home");
+              } else {
+                console.log("not login");
+                replace("Login");
+              }
+            }
+          }, 300);
+          
+          return () => clearTimeout(timer); 
+
+    
+        
+    }, [login, loaded]);
 
 
   return (

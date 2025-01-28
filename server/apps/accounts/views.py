@@ -49,3 +49,17 @@ class UserApiView(APIView):
             return ErrorResponse(serializer.errors)
         except UserProfile.DoesNotExist:
             return ErrorResponse("Profile not found")
+
+
+class RegisterApiView(APIView):
+    def post(self, request):
+        data = request.data
+        try:
+            user = User.objects.create_user(
+                username=data["username"], 
+                password=data["password"], 
+            )
+            user.save()
+            return SuccessResponse(message="User created successfully",status=201 , data={"username":user.username} , key="user")
+        except Exception as e:
+            return ErrorResponse(str(e) , status=400)

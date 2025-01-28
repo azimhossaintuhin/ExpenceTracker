@@ -9,7 +9,7 @@ def SuccessResponse(data:Union[ dict| list ], status:int , key:str , message:str
         "message": message
     }
 
-    if key and  data:
+    if key:
         response[key] = data
 
     return Response(response, status=status)
