@@ -1,4 +1,5 @@
-# Task Master ✅ <img src="./src/assets/todo-icon.png" alt="Task Master Icon" width="150" height="150">
+# Task Master ✅
+# <img src="./src/assets/todo-icon.png" alt="Task Master Icon" width="150" height="150">
 
 ## Overview
 Task Master is a powerful, user-friendly mobile application designed to help you effortlessly manage and organize your daily tasks. Built with React Native and Django REST Framework, this full-stack app provides a seamless experience for task management across iOS and Android platforms.
