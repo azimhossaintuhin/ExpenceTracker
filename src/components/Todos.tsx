@@ -1,5 +1,5 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { TodosProps } from "../types";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { Colors } from "../constant/Colors";
@@ -22,7 +22,7 @@ const Todos: React.FC<TodosProps> = ({ item, index }) => {
   const deleteIconColor = useSharedValue(item.completed ? Colors.white : "red");
 
   // Effect to update shared values when item.completed changes
-  React.useEffect(() => {
+  useEffect(() => {
     bgColor.value = withTiming(item.completed ? Colors.primary : Colors.white);
     textColor.value = withTiming(item.completed ? Colors.white : "#000");
     editIconColor.value = withTiming(item.completed ? Colors.white : "blue");
