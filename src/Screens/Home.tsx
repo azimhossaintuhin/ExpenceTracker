@@ -8,6 +8,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   ActivityIndicator,
+  Keyboard
 } from "react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -199,6 +200,7 @@ const Home = () => {
                       resetForm();
                       queryClient.invalidateQueries<any>("todos");
                       bottomSheetRef.current?.close();
+                      Keyboard.dismiss();
                     },
                   })
                 }

@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View ,KeyboardAvoidingView , Keyboard } from "react-native";
 import React, { useEffect } from "react";
 import { TodosProps } from "../types";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
@@ -95,13 +95,19 @@ const Todos: React.FC<TodosProps> = ({ item, index }) => {
   }));
 
   return (
+
     <GestureDetector gesture={longPressHandler}>
       <Animated.View style={[styles.todoContainer, containerStyle]}>
         {edit ? (
+          <KeyboardAvoidingView behavior="padding" style={{ width: "100%" }} >
           <View style={styles.editContainer}>
+        
             <Formik
               initialValues={{ todo: item.todo }}
-              onSubmit={(values) => updateMutation({ id: item.id, todo: values.todo })}
+              onSubmit={(values) => {
+                updateMutation({ id: item.id, todo: values.todo })
+                Keyboard.dismiss()
+            }}
               validationSchema={Yup.object().shape({
                 todo: Yup.string().required("Please enter a todo"),
               })}
@@ -125,6 +131,7 @@ const Todos: React.FC<TodosProps> = ({ item, index }) => {
               )}
             </Formik>
           </View>
+          </KeyboardAvoidingView>
         ) : (
           <>
             <Animated.Text style={[styles.todoText, textStyle]}>

@@ -24,6 +24,7 @@ const ValideationFiled: FC<InputTypes> = ({
         keyboardType={fieldName === "email" ? "email-address" : "default"}
         secureTextEntry={fieldName === "password" || fieldName === "confirmPassword"}  
         style={styles.input}
+        
       />
 
       {errors?.[fieldName] && touched?.[fieldName] && (
