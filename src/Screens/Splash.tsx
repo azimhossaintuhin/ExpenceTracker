@@ -25,7 +25,7 @@ const Splash = () => {
                 replace("Login");
               }
             }
-          }, 300);
+          }, 350);
           
           return () => clearTimeout(timer); 
 
@@ -36,8 +36,8 @@ const Splash = () => {
 
   return (
     <View style={styles.container}>
-        <Image source={require("../assets/budget.png")}  style={styles.image}/>
-        <Text style={styles.text}>Budget Tracker</Text>
+        <Image source={require("../assets/todo.png")}  style={styles.image}/>
+        <Text style={styles.text}>Todo Tracker</Text>
     </View>
   )
 }
