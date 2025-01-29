@@ -5,9 +5,11 @@ from .models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):   
     class Meta:
         model = UserProfile
-        fields = '__all__'
+     
+        exclude = ['user']
     
     def to_representation(self, instance):
         response =  super().to_representation(instance)
-        response["user"] = instance.user.username
+        response["username"] = instance.user.username
+        response["email"] = instance.user.email
         return response

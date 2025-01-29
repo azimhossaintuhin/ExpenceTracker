@@ -7,6 +7,7 @@ import { navigationRef } from "../utils/Navigations";
 import Home from "../Screens/Home";
 import SignUp from "../Screens/auth/SignUp";
 import { useAuth } from "../context/context";
+import Profile from "../Screens/Profile";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -30,8 +31,10 @@ const Routes = () => {
             <Stack.Screen name="SignUp" component={SignUp} />
           </>
         ) : (
-         
+         <>
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

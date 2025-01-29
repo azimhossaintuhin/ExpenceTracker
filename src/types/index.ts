@@ -7,7 +7,7 @@ export type RootStackParamList = {
     SignUp: undefined ;
     Home: undefined;
     Details: { id: number };
-    Profile: { name: string};
+    Profile: undefined;
     NotFound: undefined;
 }
 
@@ -31,8 +31,8 @@ export interface InputTypes {
     touched?: {
       [key: string]: boolean;
     };
-    handleChange?: (name: string) => any;  // Optional function for handleChange
-    handleBlur?: (name:string)=>any;    // Optional function for handleBlur
+    handleChange?: (name: string) => any;  
+    handleBlur?: (name:string)=>any;    
   }
 
 

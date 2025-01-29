@@ -97,6 +97,8 @@ const Login = () => {
                   errors={errors}
                   touched={touched}
                 />
+
+                
                 <View style={styles.fgContainer}>
                   <Text style={{ color: Colors.primary }}>
                     Forgot Password?

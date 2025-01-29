@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
             setLogin(true);
         } catch (err) {
             console.log("Error in loginHandler:", err);
-           
             setLogin(false); 
             
         }
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ login, setLogin, user, setUser}}>
+        <AuthContext.Provider value={{ login, setLogin, user, setUser , loginHandler}}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,4 +1,12 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View ,KeyboardAvoidingView , Keyboard } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Keyboard,
+} from "react-native";
 import React, { useEffect } from "react";
 import { TodosProps } from "../types";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
@@ -9,14 +17,21 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import ValideationFiled from "./CoustomFields";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const Todos: React.FC<TodosProps> = ({ item, index }) => {
   const [edit, setEdit] = React.useState<boolean>(false);
   const queryClient = useQueryClient();
 
   // Initialize shared values based on current completion status
-  const bgColor = useSharedValue(item.completed ? Colors.primary : Colors.white);
+  const bgColor = useSharedValue(
+    item.completed ? Colors.primary : Colors.white
+  );
   const textColor = useSharedValue(item.completed ? Colors.white : "#000");
   const editIconColor = useSharedValue(item.completed ? Colors.white : "blue");
   const deleteIconColor = useSharedValue(item.completed ? Colors.white : "red");
@@ -62,7 +77,9 @@ const Todos: React.FC<TodosProps> = ({ item, index }) => {
   const { mutate: completedTodo } = useMutation({
     mutationKey: ["updateTodo"],
     mutationFn: async () => {
-      await ApiInstance.patch(`/todos/${item.id}/`, { completed: !item.completed });
+      await ApiInstance.patch(`/todos/${item.id}/`, {
+        completed: !item.completed,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
@@ -95,42 +112,44 @@ const Todos: React.FC<TodosProps> = ({ item, index }) => {
   }));
 
   return (
-
+    
     <GestureDetector gesture={longPressHandler}>
       <Animated.View style={[styles.todoContainer, containerStyle]}>
         {edit ? (
-          <KeyboardAvoidingView behavior="padding" style={{ width: "100%" }} >
-          <View style={styles.editContainer}>
-        
-            <Formik
-              initialValues={{ todo: item.todo }}
-              onSubmit={(values) => {
-                updateMutation({ id: item.id, todo: values.todo })
-                Keyboard.dismiss()
-            }}
-              validationSchema={Yup.object().shape({
-                todo: Yup.string().required("Please enter a todo"),
-              })}
-            >
-              {({ handleChange, handleBlur, handleSubmit, values }) => (
-                <>
-                  <ValideationFiled
-                    fieldName="todo"
-                    values={values}
-                    handleChange={handleChange("todo")}
-                    handleBlur={handleBlur}
-                  />
-                  <Pressable onPress={() => handleSubmit()} style={styles.doneButton}>
-                    {isPending ? (
-                      <ActivityIndicator color={Colors.white} size="small" />
-                    ) : (
-                      <Text style={styles.doneButtonText}>Done</Text>
-                    )}
-                  </Pressable>
-                </>
-              )}
-            </Formik>
-          </View>
+          <KeyboardAvoidingView behavior="padding" style={{ width: "100%" }}>
+            <View style={styles.editContainer}>
+              <Formik
+                initialValues={{ todo: item.todo }}
+                onSubmit={(values) => {
+                  updateMutation({ id: item.id, todo: values.todo });
+                  Keyboard.dismiss();
+                }}
+                validationSchema={Yup.object().shape({
+                  todo: Yup.string().required("Please enter a todo"),
+                })}
+              >
+                {({ handleChange, handleBlur, handleSubmit, values }) => (
+                  <>
+                    <ValideationFiled
+                      fieldName="todo"
+                      values={values}
+                      handleChange={handleChange("todo")}
+                      handleBlur={handleBlur}
+                    />
+                    <Pressable
+                      onPress={() => handleSubmit()}
+                      style={styles.doneButton}
+                    >
+                      {isPending ? (
+                        <ActivityIndicator color={Colors.white} size="small" />
+                      ) : (
+                        <Text style={styles.doneButtonText}>Done</Text>
+                      )}
+                    </Pressable>
+                  </>
+                )}
+              </Formik>
+            </View>
           </KeyboardAvoidingView>
         ) : (
           <>
@@ -140,7 +159,11 @@ const Todos: React.FC<TodosProps> = ({ item, index }) => {
             <View style={styles.iconContainer}>
               {item.completed ? (
                 <Animated.View>
-                  <MaterialIcon name="check-circle" size={20} color={Colors.white} />
+                  <MaterialIcon
+                    name="check-circle"
+                    size={20}
+                    color={Colors.white}
+                  />
                 </Animated.View>
               ) : (
                 <Pressable onPress={() => setEdit(!edit)}>

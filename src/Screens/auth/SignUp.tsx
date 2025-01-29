@@ -50,7 +50,7 @@ const SignUp = () => {
           </View>
 
           <Formik
-            initialValues={{ username: "", password: "", confirmPassword: "" }}
+            initialValues={{ username: "",email:"", password: "", confirmPassword: "" }}
             onSubmit={(values) => mutate(values)}
             validationSchema={SignupSchema}
           >
@@ -67,6 +67,16 @@ const SignUp = () => {
                   fieldName="username"
                   values={values}
                   handleChange={handleChange("username")}
+                  handleBlur={handleBlur}
+                  errors={errors}
+                  touched={touched}
+                />
+
+
+                <ValideationFiled
+                  fieldName="email"
+                  values={values}
+                  handleChange={handleChange("email")}
                   handleBlur={handleBlur}
                   errors={errors}
                   touched={touched}

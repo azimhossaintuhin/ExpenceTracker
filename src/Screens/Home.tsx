@@ -1,6 +1,5 @@
 import {
   ScrollView,
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -12,7 +11,6 @@ import {
 } from "react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { gloabalwidth, Globalcontainer } from "../constant/Styles";
 import Card from "../components/Card";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Colors } from "../constant/Colors";
@@ -26,15 +24,22 @@ import ValideationFiled from "../components/CoustomFields";
 import * as Yup from "yup";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiInstance } from "../config/Api";
+import { styles } from "../styles/HomeStyle";
+import { push } from "../utils/Navigations";
+import { useAuth } from "../context/context";
+
+
 
 const Home = () => {
+  const {user} =  useAuth()
   const [search, setSearch] = useState<boolean>(false);
-
   const [counter, setCounter] = useState({
     all: 0,
     pending: 0,
     completed: 0,
   });
+
+  const  image = user?.image || "https://avatar.iran.liara.run/public/boy"
 
   const queryClient = useQueryClient();
 
@@ -112,7 +117,19 @@ const Home = () => {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scroller}>
+        <ScrollView 
+        showsVerticalScrollIndicator={false}
+        style={styles.scroller}>
+          {/* header */}
+          <View style={styles.header}>
+            <Text style={styles.logoText}>TODO <Text style={{color:Colors.primary , fontSize:15}}>Tracker</Text></Text>
+           <View>
+            <Pressable onPress={()=>push("Profile")}>
+            <Image source={{uri:image}} style={{width:45 , height:45 , borderRadius:30}}/>
+            </Pressable>
+           </View>
+          </View>
+
           {/* Search Bar */}
           <View style={styles.searchContainer}>
             <TextInput
@@ -245,124 +262,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    ...Globalcontainer,
-  },
-  scroller: {
-    width: "100%",
-    padding: 10,
-  },
-  cardContainer: {
-    width: "100%",
-    paddingHorizontal: 5,
-    paddingVertical: 5,
-  },
-
-  // Search Bar
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginBottom: 8,
-    borderRadius: 5,
-    backgroundColor: "white",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  searchInput: {
-    flex: 1,
-    padding: 10,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "lightgrey",
-    borderRadius: 5,
-  },
-  searchButton: {
-    padding: 10,
-    backgroundColor: Colors.primary,
-    borderRadius: 5,
-    marginLeft: 8,
-  },
-
-  // Search Result (No Result Found)
-  errorContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  errorImage: {
-    width: gloabalwidth * 0.5,
-    height: gloabalwidth * 0.5,
-    resizeMode: "contain",
-    marginBottom: 10,
-  },
-  errorText: {
-    fontSize: 16,
-    color: "gray",
-    fontWeight: "600",
-  },
-
-  todoContainer: {
-    paddingHorizontal: 10,
-    backgroundColor: Colors.white,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  todoHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    fontFamily: "Manrope",
-  },
-  hederButton: {
-    padding: 4,
-    backgroundColor: Colors.primary,
-    borderRadius: 5,
-  },
-  todoScroller: {
-    width: "100%",
-    paddingBottom: 30,
-  },
-
-  sheetHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  sheetText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  sheetForm: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  seetSubmitBtn: {
-    padding: 10,
-    backgroundColor: Colors.primary,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  NullText: {
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.fourthColor,
-    marginVertical: 20,
-  },
-});
