@@ -1,16 +1,16 @@
-# Expense Tracker 💸
+# Task Master ✅
+# <img src="./src/assets/todo.png" alt="Task Master Icon" width="150" height="150">
 
-<img src="./src/assets/budget.png" alt="Expense Tracker Screenshot" width="150" height="150">
 ## Overview
-
-Expense Tracker is a powerful, user-friendly mobile application designed to help you effortlessly manage and track your personal expenses. Built with modern technologies, this full-stack app provides a seamless experience for financial tracking and analysis.
+Task Master is a powerful, user-friendly mobile application designed to help you effortlessly manage and organize your daily tasks. Built with React Native and Django REST Framework, this full-stack app provides a seamless experience for task management across iOS and Android platforms.
 
 ## 🌟 Features
-
 - **User Authentication**: Secure login and profile management
-- **Expense Categorization**: Organize expenses into customizable categories
+- **Task Organization**: Create, organize, and prioritize tasks
+- **Smart Categories**: Group tasks by projects or categories
+- **Due Dates**: Set and track task deadlines
 - **Intuitive UI**: Clean and responsive design using React Native
-- **Local Database**: SQLite integration for offline data storage
+- **MMKV Storage**: MMKV integration for offline data access
 - **Flexible Navigation**: Smooth bottom sheet interactions
 
 ## 🚀 Tech Stack
@@ -20,6 +20,7 @@ Expense Tracker is a powerful, user-friendly mobile application designed to help
 - **Expo**: Rapid development and deployment
 - **React Navigation**: Smooth screen transitions
 - **@gorhom/bottom-sheet**: Interactive bottom sheet components
+- **AsyncStorage**: Local data persistence
 
 ### Backend
 - **Django**: Robust Python web framework
@@ -29,59 +30,56 @@ Expense Tracker is a powerful, user-friendly mobile application designed to help
 ## 🛠 Installation
 
 ### Backend Setup
-
 1. Navigate to the backend directory:
-   ```bash
-   cd server
-   ```
+```bash
+cd server
+```
 
 2. Create and activate a virtual environment:
-   ```bash
-   # On macOS/Linux
-   python3 -m venv env
-   source env/bin/activate
+```bash
+# On macOS/Linux
+python3 -m venv env
+source env/bin/activate
 
-   # On Windows
-   python -m venv env
-   env\Scripts\activate
-   ```
+# On Windows
+python -m venv env
+env\Scripts\activate
+```
 
 3. Install backend dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
 4. Apply database migrations:
-   ```bash
-   python manage.py migrate
-   ```
+```bash
+python manage.py migrate
+```
 
 5. Start the Django development server:
-   ```bash
-   python manage.py runserver
-   ```
+```bash
+python manage.py runserver
+```
 
 ### Frontend Setup
-
 1. Return to project root:
-   ```bash
-   cd ..
-   ```
+```bash
+cd ..
+```
 
 2. Install frontend dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 3. Launch Expo development server:
-   ```bash
-   npx expo start
-   ```
+```bash
+npx expo start
+```
 
 ## 📂 Project Structure
-
 ```
-expense-tracker/
+task-master/
 │
 ├── server/               # Django Backend
 │   ├── api/              # API endpoints
@@ -95,33 +93,44 @@ expense-tracker/
 │   ├── screens/          # App screens
 │   ├── navigation/       # Navigation setup
 │   ├── context/          # State management
-│   └── App.tsx           # Application entry point
+│   └── App.tsx          # Application entry point
 │
 ├── assets/               # Project assets
-└── README.md             # Project documentation
+└── README.md            # Project documentation
 ```
 
 ## 💾 Database
-
 The project uses **SQLite** for local development and data persistence. To inspect the database, we recommend:
 - VS Code SQLite Viewer extension
 - DB Browser for SQLite
 
-## 🤝 Contributing
+## 🔑 API Endpoints
 
-Contributions are welcome! Please follow these steps:
+### Tasks
+- `GET /api/tasks/` - Get all tasks
+- `POST /api/tasks/` - Create a new task
+- `PUT /api/tasks/:id/` - Update a task
+- `DELETE /api/tasks/:id/` - Delete a task
+
+### Users
+- `POST /api/users/register/` - Register a new user
+- `POST /api/users/login/` - User login
+- `GET /api/users/profile/` - Get user profile
+
+## 🤝 Contributing
+We welcome contributions! Please follow these steps:
+
 1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+2. Create a new branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+## 📞 Support
+For support, feature requests, or bug reports, please open an issue in the GitHub repository.
 
-## 📞 Contact
-
-For questions or support, please open an issue in the GitHub repository.
-
-**Happy Expense Tracking! 📊**
+**Happy Task Managing! ✨**
