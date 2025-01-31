@@ -1,6 +1,6 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { mmkv } from "../utils/MMKV";
-
+const Base="192.168.0.106:8000"
 const getToken = () => {
     const access = mmkv.getItem("access") ?? ""; // Ensure it doesn't return undefined
     const refresh = mmkv.getItem("refresh") ?? "";
@@ -18,7 +18,7 @@ const removeToken = () => {
 };
 
 export const ApiInstance = axios.create({
-    baseURL: "http://192.168.0.106:8000/api/v1/",
+    baseURL: "https://todo.codecommerze.xyz/api/v1/",
     headers: {
         "Content-Type": "application/json",
     },
@@ -49,7 +49,7 @@ ApiInstance.interceptors.response.use(
         const { refresh } = getToken();
         if (error.response?.status === 401 && refresh) {
             try {
-                const response = await axios.post("http://192.168.0.106:8000/api/v1/token/refresh/", {
+                const response = await axios.post("https://todo.codecommerze.xyz/api/v1/token/refresh/", {
                     refresh,
                 });
                 setToken(response.data.access, response.data.refresh);

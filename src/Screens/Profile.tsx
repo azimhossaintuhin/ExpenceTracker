@@ -28,19 +28,17 @@ const Profile = () => {
   const { user, setLogin, loginHandler } = useAuth();
 
   const [edit, setEdit] = useState<boolean>(false);
-  const [profileImage, setImage] = useState<string>(user?.image || "");
+  const [tempImage, setTempImage] = useState<string | null>(null); // Changed to tempImage
   
   const excludeField = ["username", "created_at", "id", "image"];
   const key = Object.keys(user).filter((item) => !excludeField.includes(item));
 
-  // handler for logout
   const logoutHandler = () => {
     mmkv.clearAll();
     setLogin(false);
     replace("Login");
   };
 
-  // handler for image picker
   const handlePickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -48,14 +46,14 @@ const Profile = () => {
       return;
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
+        mediaTypes:["images"], // Fixed mediaTypes to use Images
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
 
       if (!result.canceled) {
-        setImage(result.assets[0].uri);
+        setTempImage(result.assets[0].uri); // Use setTempImage
       }
     }
   };
@@ -65,18 +63,16 @@ const Profile = () => {
     mutationFn: async (values: any) => {
       try {
         const formdata = new FormData();
-        if (profileImage) {
-          const uri = profileImage;
+        if (tempImage) {
+          const uri = tempImage;
           const uriParts = uri.split(".");
-          console.log("uriParts:", uriParts);
           const fileType = uriParts[uriParts.length - 1];
-          const filename = uri.split("/").pop().split(".")[0];
-          console.log("filename:", filename);
-          formdata?.append("image", {
+          const filename = uri.split("/").pop()?.split(".")[0] || "image";
+          formdata.append("image", {
             uri,
             name: `${filename}.${fileType}`,
             type: `image/${fileType}`,
-          });
+          } as any);
         }
         formdata.append("full_name", values.full_name);
         formdata.append("phone", values.phone);
@@ -91,11 +87,13 @@ const Profile = () => {
         return response.data;
       } catch (error) {
         console.log("Error in updateProfile:", error);
+        throw error;
       }
     },
     onSuccess: (data) => {
       console.log("Updated Profile:", data);
-      loginHandler();
+      loginHandler(); 
+      setTempImage(null); 
       setEdit(false);
     },
     onError: (error) => {
@@ -125,13 +123,9 @@ const Profile = () => {
       >
         <SafeAreaView style={styles.ProfileContainer}>
           <View style={styles.profileHero}>
-            <Pressable
-              onPress={() => {
-                edit ? handlePickImage() : null;
-              }}
-            >
+            <Pressable onPress={() => edit && handlePickImage()}>
               <Image
-                source={{ uri: profileImage || image }}
+                source={{ uri: tempImage || user?.image || image }} // Use tempImage first
                 style={styles.profileImage}
               />
             </Pressable>
@@ -317,3 +311,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+

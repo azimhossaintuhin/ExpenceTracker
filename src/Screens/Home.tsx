@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Keyboard
 } from "react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Card from "../components/Card";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -31,7 +31,8 @@ import { useAuth } from "../context/context";
 
 
 const Home = () => {
-  const {user} =  useAuth()
+  const {user , loginHandler} =  useAuth()
+  
   const [search, setSearch] = useState<boolean>(false);
   const [counter, setCounter] = useState({
     all: 0,
@@ -39,7 +40,7 @@ const Home = () => {
     completed: 0,
   });
 
-  const  image = user?.image || "https://avatar.iran.liara.run/public/boy"
+
 
   const queryClient = useQueryClient();
 
@@ -81,6 +82,7 @@ const Home = () => {
     queryFn: async () => {
       try {
         const response = await ApiInstance.get("/todos/");
+ 
         return response.data.todos;
       } catch (error) {
         throw new Error(error);
@@ -88,7 +90,7 @@ const Home = () => {
     },
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending ,  } = useMutation({
     mutationKey: ["addTodo"],
     mutationFn: async (data: { todo: string }) => {
       try {
@@ -100,7 +102,9 @@ const Home = () => {
     },
   });
 
+
   useEffect(() => {
+    
     if (todos) {
       const all = todos.length;
       const pending = todos.filter((todo: any) => !todo.completed).length;
@@ -111,8 +115,21 @@ const Home = () => {
         completed: completed,
       };
       setCounter(counter_data);
+      
+
     }
   }, [todos]);
+
+  useEffect(() => {
+    loginHandler()
+  }, [])
+
+  const profileimage =
+  user?.image !== null
+    ? user?.image
+    : "https://avatar.iran.liara.run/public/boy";
+  
+    
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -125,7 +142,7 @@ const Home = () => {
             <Text style={styles.logoText}>TODO <Text style={{color:Colors.primary , fontSize:15}}>Tracker</Text></Text>
            <View>
             <Pressable onPress={()=>push("Profile")}>
-            <Image source={{uri:image}} style={{width:45 , height:45 , borderRadius:30}}/>
+            <Image source={{uri:profileimage}} style={{width:45 , height:45 , borderRadius:30}}/>
             </Pressable>
            </View>
           </View>

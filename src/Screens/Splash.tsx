@@ -7,31 +7,18 @@ import { useAuth } from '../context/context'
 
 const Splash = () => {
 
-    const [loaded] = useFonts({
+    const [fontsLoaded] = useFonts({
         "Manrope": require("../assets/fonts/Manrope-VariableFont_wght.ttf")
     })
 
-    const {login , loading} = useAuth()
+    const {login , authInitialized , } = useAuth()
 
     useEffect(() => {
-        
-        const timer = setTimeout(() => {
-            if (loaded && !loading) {
-              if (login) {
-                console.log("login");
-                replace("Home");
-              } else {
-                console.log("not login");
-                replace("Login");
-              }
-            }
-          }, 350);
-          
-          return () => clearTimeout(timer); 
-
-    
-        
-    }, [login, loaded]);
+      if (fontsLoaded && authInitialized) {
+        const route = login ? "Home" : "Login";
+        replace(route);
+      }
+    }, [fontsLoaded, authInitialized, login]);
 
 
   return (
